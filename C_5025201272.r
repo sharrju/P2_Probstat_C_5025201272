@@ -56,3 +56,91 @@ qt(p=0.05, df=2, lower.tail=FALSE)
 # F di readme
 
 
+# No.4
+# A
+oneWayData  <- read.table(url("https://rstatisticsandresearch.weebly.com/uploads/1/0/2/6/1026585/onewayanova.txt"))
+dim(oneWayData)
+head(oneWayData)
+attach(oneWayData)
+
+oneWayData$Length <- as.factor(oneWayData$V2)
+oneWayData$Group <- as.factor(oneWayData$V1)
+oneWayData$Group = factor(oneWayData$Group,labels = c("Kucing Oren","Kucing Hitam","Kucing Putih","Kucing Oren"))
+class(oneWayData$Group)
+
+grup1 <- subset(oneWayData, Group == "Kucing Oren")
+grup2 <- subset(oneWayData, Group == "Kucing Hitam")
+grup3 <- subset(oneWayData, Group == "Kucing Putih")
+
+ggplot(
+  data = grup1, 
+  aes(sample = Length)
+  ) + geom_qq()
+  
+ggplot(
+  data = grup2, 
+  aes(sample = Length)
+  ) + geom_qq()
+  
+ggplot(
+  data = grup3, 
+  aes(sample = Length)
+  ) + geom_qq()
+
+# B
+bartlett.test(oneWayData$Group, oneWayData$Length)
+
+#C
+qqnorm(grup1$Length)
+qqline(grup1$Length)
+
+# E
+model <- lm(Length~Group, data = oneWayData)
+anova(model)
+TukeyHSD(aov(model))
+
+# F
+ggplot(
+  oneWayData, 
+  aes(x = Group, y = Length)) + geom_boxplot(colour = "black") + scale_x_discrete() + xlab("Species") + ylab("Length")
+
+
+# No.5
+# A
+GTL <- read_csv("GTL.csv")
+head(GTL)
+
+str(GTL)
+
+qplot(x = Temp, y = Light, geom = "point", data = GTL) +
+  facet_grid(.~Glass, labeller = label_both)
+
+# B
+GTL$Glass <- as.factor(GTL$Glass)
+GTL$Temp_Factor <- as.factor(GTL$Temp)
+str(GTL)
+
+anova <- aov(Light ~ Glass*Temp_Factor, data = GTL)
+summary(anova)
+
+# C
+data_summary <- group_by(GTL, Glass, Temp) %>%
+  summarise(mean=mean(Light), sd=sd(Light)) %>%
+  arrange(desc(mean))
+print(data_summary)
+
+# D
+tukey <- TukeyHSD(anova)
+print(tukey)
+
+# E
+tukey.cld <- multcompLetters4(anova, tukey)
+print(tukey.cld)
+
+cld <- as.data.frame.list(tukey.cld$`Glass:Temp_Factor`)
+data_summary$Tukey <- cld$Letters
+print(data_summary)
+
+write.csv("GTL_summary.csv")
+
+
