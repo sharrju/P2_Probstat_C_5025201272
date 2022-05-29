@@ -56,3 +56,43 @@ P(Z > 8.9744) = 1 - P(Z < 8.9744)
 = 0
 ```
 Kesimpulan : Hipotesis awal (H0) bahwa "Mobil dikemudikan rata-rata lebih dari 20.000 kilometer per tahun" diterima.
+
+
+### Soal 3
+> Berilah keputusan serta kesimpulan yang didapatkan dari hasil diatas. Asumsikan nilai variancenya sama, apakah ada perbedaan pada
+rata-ratanya (α= 0.05)?
+
+> a. H0 dan H1
+![Screenshot (34)](https://user-images.githubusercontent.com/81427127/170869944-f00b7dd6-7f5d-40d1-94b5-36356526c24f.png)
+
+
+> b. Hitung sampel statistik
+```ruby 
+tsum.test(mean.x = 3.64, s.x = 1.67, n.x = 19, mean.y = 2.79 , s.y = 1.32, n.y = 27, alternative = "greater", var.equal = TRUE)
+```
+![Screenshot (35)](https://user-images.githubusercontent.com/81427127/170870305-675ef680-cc88-4269-9d8e-e5d151824237.png)
+
+
+> c. Lakukan Uji Statistik (df =2)
+```ruby
+install.packages("mosaic")
+library(mosaic)
+
+plotDist(dist = 't', df = 2, col = "green")
+```
+![8cdb2b89-cd78-4b12-9b20-5184f0b1840b](https://user-images.githubusercontent.com/81427127/170870761-10bb87c8-7428-449b-9f34-4029c5d9cb4b.png)
+
+> d. Nilai Kritikal
+Untuk mendapatkakn nilai kritikal, gunakan `qt` dengan `df = 2` sesuai dengan soal 3C
+```ruby
+qt(p=0.05, df=2, lower.tail=FALSE)
+```
+Output :
+![Screenshot (36)](https://user-images.githubusercontent.com/81427127/170871885-16e86f56-0eb5-4168-a5fa-35c7d6e9f2d6.png)
+
+> e. Keputusan
+Dari hasil t-test didapatkan p-value = 0.03024 < 0.05. Maka H0 ditolak.
+
+> f. Kesimpulan
+Kesimpulannya terdapat perbedaan antara rata-rata saham bandung dengan rata-rata saham bali.
+
