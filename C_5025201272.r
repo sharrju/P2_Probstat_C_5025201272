@@ -19,3 +19,17 @@ sd(Y-X)
 #B
 t.test(Y,X,paired = TRUE,var.equal = FALSE)
 # source : https://datascienceplus.com/t-tests/#:~:text=To%20conduct%20a%20one%2Dsample,specified%20by%20the%20null%20hypothesis.
+
+#C di readme
+
+# No.2
+# A
+# Setuju
+
+# B
+zsum.test(mean.x = 23500,sigma.x = 3900,n.x = 100,alternative = "less",mu = 20000)
+
+# C
+# H(0) "Mobil dikemudikan rata-rata lebih dari 20.000 kilometer per tahun" diterima
+
+
