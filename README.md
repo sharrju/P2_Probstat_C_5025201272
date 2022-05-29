@@ -185,4 +185,73 @@ ggplot(oneWayData, aes(x = Group, y = Length)) +
 ```
 ![image](https://user-images.githubusercontent.com/81427127/170874474-6a6a6b40-0705-4c10-b797-f10d45694a50.png)
 
+### Soal 5
+> Data yang digunakan merupakan hasil eksperimen yang dilakukan untuk
+mengetahui pengaruh suhu operasi (100˚C, 125˚C dan 150˚C) dan tiga jenis kaca
+pelat muka (A, B dan C) pada keluaran cahaya tabung osiloskop. Percobaan
+dilakukan sebanyak 27 kali dan didapat data sebagai berikut: Data Hasil
+Eksperimen. Dengan data tersebut:
+
+> a. Buatlah plot sederhana untuk visualisasi data
+```ruby
+GTL <- read_csv("GTL.csv")
+head(GTL)
+
+str(GTL)
+```
+Output :
+![Screenshot (38)](https://user-images.githubusercontent.com/81427127/170875490-1cd203e6-e30b-4fdd-a48e-47375b974374.png)
+
+Lakukan visualisasi.
+```ruby
+qplot(x = Temp, y = Light, geom = "point", data = GTL) +
+  facet_grid(.~Glass, labeller = label_both)
+```
+![image](https://user-images.githubusercontent.com/81427127/170875529-3139a373-2c0d-4946-beb6-1afc38442e19.png)
+
+> b. Lakukan uji ANOVA dua arah
+
+Buat variabel as factor sebagai ANOVA. Kemudian lakukan analisis of variance.
+```ruby
+GTL$Glass <- as.factor(GTL$Glass)
+GTL$Temp_Factor <- as.factor(GTL$Temp)
+str(GTL)
+
+anova <- aov(Light ~ Glass*Temp_Factor, data = GTL)
+summary(anova)
+```
+![Screenshot (39)](https://user-images.githubusercontent.com/81427127/170875673-c44e5704-2148-43f0-8902-645a2f4a167d.png)
+
+> c. Tampilkan tabel dengan mean dan standar deviasi keluaran cahaya untuk setiap perlakuan (kombinasi kaca pelat muka dan suhu operasi)
+
+```ruby
+data_summary <- group_by(GTL, Glass, Temp) %>%
+  summarise(mean=mean(Light), sd=sd(Light)) %>%
+  arrange(desc(mean))
+print(data_summary)
+```
+![Screenshot (40)](https://user-images.githubusercontent.com/81427127/170875740-a98f8ce0-856a-4339-a712-20cfb01dd262.png)
+
+> d. Lakukan uji Tukey
+```ruby
+tukey <- TukeyHSD(anova)
+print(tukey)
+```
+
+> e. Gunakan compact letter display untuk menunjukkan perbedaan signifikan antara uji Anova dan uji Tukey
+
+Compact letter display.
+```ruby
+tukey.cld <- multcompLetters4(anova, tukey)
+print(tukey.cld)
+```
+Tambahkan compact letter display tersebut ke tabel dengan means(rata-rata) dan sd.
+```ruby
+cld <- as.data.frame.list(tukey.cld$`Glass:Temp_Factor`)
+data_summary$Tukey <- cld$Letters
+print(data_summary)
+```
+
+![image](https://user-images.githubusercontent.com/81427127/170875877-c2ad4d49-9f6b-4ae2-a4bd-0834054bbb39.png)
+
 
